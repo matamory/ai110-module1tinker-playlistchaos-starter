@@ -1,3 +1,8 @@
+## TF Task
+
+In this assignment, students will be practicing how to debug AI generated code while also using AI to help guide them within the IDE when making adjustments. Given that this is the first assignment, I believe students will likely struggle the most with setup and getting used to Copilot. I personally had some trouble configuring venv but this also might have been because I am working on a mac. The AI will be misleading if they specifically ask it to identify the issues in the code without testing out the functionality themselves first. If students correctly take the time to locate potential bugs themselves, then AI copilot does a better job during the AI Debugging Collaboration section. One way I would guide the student without giving the answer would be to check-in and ensure they have considered the asked themselves all the questions that are included in the module. I think it might be tempting to overlook some of the checkpoints at times, but overall they do a good job at reframing how students should be approaching the current problem. 
+
+
 # Playlist Chaos
 
 Your AI assistant tried to build a smart playlist generator. The app runs, but some of the behavior is unpredictable. Your task is to explore the app, investigate the code, and use an AI assistant to debug and improve it.
@@ -7,6 +12,7 @@ This activity is your first chance to practice AI-assisted debugging on a codeba
 You do not need to understand everything at once. Approach the app as a curious investigator, work with an AI assistant to explain what you find, and make targeted improvements.
 
 ---
+
 
 ## How the code is organized
 
@@ -34,15 +40,6 @@ The logic behind the app, including:
 You will need to look at both files to understand how the app behaves.
 
 ---
-## TF Task
-The core concept students needed to understand:
-
-Where students are most likely to struggle:
-
-Where AI was helpful versus misleading:
-
-One way you would guide a student without giving the answer:
-
 
 
 ## What you will do
@@ -60,6 +57,12 @@ Run the app and try things out:
 
 As you explore, write down at least five things that feel confusing, inconsistent, or strange. These might be bugs, quirks, or unexpected design decisions.
 
+1. Issues with search functionality, searching 'AC' does not result in songs by AC/DC being returned. Case sensitivity seems to be working fine
+2. Hype ratio appears to be incorrectly calculated
+3. Unable to process lucky find from empty playlist
+4. Some songs are misclassifed after adjusting profile
+5. History doesn't adjust to new categorization
+
 ### 2. Ask AI for help understanding the code  
 
 Pick one issue from your list. Use an AI coding assistant to:
@@ -73,6 +76,8 @@ For example:
 > "Here is the function that classifies songs. The app is mislabeling some songs. Help me understand what the function is doing and where the logic might need adjustment."
 
 Before making changes, summarize in your own words what you think is happening.
+
+In regards to the error that occurs with lucky picks for empty lists, I think there is no consideration for the edge case where the list songs is empty. 
 
 ### 3. Fix at least four issues  
 

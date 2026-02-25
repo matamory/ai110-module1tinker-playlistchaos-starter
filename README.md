@@ -34,6 +34,16 @@ The logic behind the app, including:
 You will need to look at both files to understand how the app behaves.
 
 ---
+## TF Task
+The core concept students needed to understand:
+
+Where students are most likely to struggle:
+
+Where AI was helpful versus misleading:
+
+One way you would guide a student without giving the answer:
+
+
 
 ## What you will do
 

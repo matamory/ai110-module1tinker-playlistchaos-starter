@@ -4,6 +4,7 @@ from playlist_logic import (
     DEFAULT_PROFILE,
     Song,
     build_playlists,
+    classify_song,
     compute_playlist_stats,
     history_summary,
     lucky_pick,
@@ -345,7 +346,7 @@ def stats_section(playlists):
         st.write("No top artist yet.")
 
 
-def history_section():
+def history_section(profile):
     """Render the pick history overview."""
     st.header("History")
 
@@ -354,12 +355,21 @@ def history_section():
         st.write("No history yet.")
         return
 
-    summary = history_summary(history)
+    reclassified_history = []
+    for song in history:
+        updated_song = dict(song)
+        normalized_song = normalize_song(updated_song)
+        updated_song["mood"] = classify_song(normalized_song, profile)
+        reclassified_history.append(updated_song)
+
+    st.session_state.history = reclassified_history
+
+    summary = history_summary(reclassified_history)
     st.write("Recent picks by mood:", summary)
 
     show_details = st.checkbox("Show full history")
     if show_details:
-        for song in history:
+        for song in reclassified_history:
             st.write(
                 f"{song.get('mood', '?')}: {song['title']} by {song['artist']}"
             )
@@ -400,7 +410,7 @@ def main():
     st.divider()
     stats_section(merged_playlists)
     st.divider()
-    history_section()
+    history_section(profile)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+import re
+
 from typing import Dict, List, Optional, Tuple
 
 Song = Dict[str, object]
@@ -19,16 +21,21 @@ def normalize_title(title: str) -> str:
     return title.strip()
 
 
+def normalize_text(value: object) -> str:
+    """Lowercase text and collapse punctuation into single spaces."""
+    if not isinstance(value, str):
+        value = str(value or "")
+    return re.sub(r"[^a-z0-9]+", " ", value.lower()).strip()
+
+
 def normalize_artist(artist: str) -> str:
     """Normalize an artist name for comparisons."""
-    if not artist:
-        return ""
-    return artist.strip().lower()
+    return normalize_text(artist)
 
 
 def normalize_genre(genre: str) -> str:
     """Normalize a genre name for comparisons."""
-    return genre.lower().strip()
+    return normalize_text(genre)
 
 
 def normalize_song(raw: Song) -> Song:
@@ -167,10 +174,8 @@ def search_songs(
     if not query:
         return songs
 
-    import re
-
-    # normalize query: lowercase, replace non-alnum with spaces, split into tokens
-    qnorm = re.sub(r"[^a-z0-9]+", " ", query.lower().strip())
+    # Normalize query once and compare against shared cleaned text.
+    qnorm = normalize_text(query)
     tokens = [t for t in qnorm.split() if t]
     if not tokens:
         return songs
@@ -183,13 +188,9 @@ def search_songs(
     else:
         search_fields = [field]
 
-    def norm_value(val: object) -> str:
-        s = str(val or "").lower()
-        return re.sub(r"[^a-z0-9]+", " ", s)
-
     for song in songs:
         # build normalized values for each searchable field
-        values = {f: norm_value(song.get(f, "")) for f in search_fields}
+        values = {f: normalize_text(song.get(f, "")) for f in search_fields}
 
         # all tokens must be present in any of the searchable fields (AND semantics)
         matched_all = True

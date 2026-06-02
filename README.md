@@ -1,7 +1,6 @@
 ## TF Task
 
-In this assignment, students will be practicing how to debug AI generated code while also using AI to help guide them within the IDE when making adjustments. Given that this is the first assignment, I believe students will likely struggle the most with setup and getting used to Copilot. I personally had some trouble configuring venv but this also might have been because I am working on a mac. The AI will be misleading if they specifically ask it to identify the issues in the code without testing out the functionality themselves first. If students correctly take the time to locate potential bugs themselves, then AI copilot does a better job during the AI Debugging Collaboration section. One way I would guide the student without giving the answer would be to check-in and ensure they have asked themselves all the questions that are included in the module. I think it might be tempting to overlook some of the checkpoints at times, but overall they do a good job at reframing how students should be approaching the current problem. 
-
+In this assignment, students will practice debugging AI generated code using AI Coding Assistant to guide them in the process. Given that this is the first assignment, I believe students will likely struggle the most with setup. The AI will be misleading if they ask it to identify the issues in the code without testing out the functionality themselves first. If students correctly take the time to locate specific potential bugs themselves, then provide good context, Copilot will do a better job during the AI Debugging Collaboration section. One way I would guide the student without giving the answer would be to ensure they have an understanding of the Codebase and have oriented themselves to the functionality contained within both files. 
 
 # Playlist Chaos
 
@@ -12,7 +11,6 @@ This activity is your first chance to practice AI-assisted debugging on a codeba
 You do not need to understand everything at once. Approach the app as a curious investigator, work with an AI assistant to explain what you find, and make targeted improvements.
 
 ---
-
 
 ## How the code is organized
 
@@ -62,6 +60,7 @@ As you explore, write down at least five things that feel confusing, inconsisten
 3. Unable to process lucky find from empty playlist
 4. Some songs are misclassifed after adjusting profile
 5. History doesn't adjust to new categorization
+6. Classification for songs seems incorrect at times. Ex. Sometimes low energy songs are classified as "hype" because of a keyword, same applies for some high energy songs being classified as "chill".
 
 ### 2. Ask AI for help understanding the code  
 
@@ -114,6 +113,8 @@ If you finish early or want an extra challenge, try one of these:
 - Add new features to the history view  
 - Introduce better error handling for empty playlists  
 - Add a new playlist category of your own design  
+
+Implemented here: search now handles punctuation, multiple tokens, and matches across artist, title, and genre.
 
 ---
 

@@ -278,7 +278,7 @@ def render_playlist(label, songs):
         return
 
     query = st.text_input(f"Search {label} playlist by artist", key=f"search_{label}")
-    filtered = search_songs(songs, query, field="artist")
+    filtered = search_songs(songs, query, field="any")
 
     if not filtered:
         st.write("No matching songs.")
@@ -355,6 +355,7 @@ def history_section(profile):
         st.write("No history yet.")
         return
 
+    # Adjusted history section to reclassify songs based on current profile, so we can see how picks would be classified under new settings
     reclassified_history = []
     for song in history:
         updated_song = dict(song)

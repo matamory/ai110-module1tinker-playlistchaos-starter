@@ -73,9 +73,11 @@ def classify_song(song: Song, profile: Dict[str, object]) -> str:
     is_hype_keyword = any(k in genre for k in hype_keywords)
     is_chill_keyword = any(k in title for k in chill_keywords)
 
-    if genre == favorite_genre or energy >= hype_min_energy or is_hype_keyword:
+    if genre == favorite_genre:
         return "Hype"
-    if energy <= chill_max_energy or is_chill_keyword:
+    if energy >= hype_min_energy and is_hype_keyword:
+        return "Hype"
+    if energy <= chill_max_energy and is_chill_keyword:
         return "Chill"
     return "Mixed"
 
@@ -116,9 +118,11 @@ def compute_playlist_stats(playlists: PlaylistMap) -> Dict[str, object]:
     chill = playlists.get("Chill", [])
     mixed = playlists.get("Mixed", [])
 
+    # Adjusted ratio calculation so that total was for al songs, not just hype
     total = len(all_songs)
     hype_ratio = len(hype) / total if total > 0 else 0.0
 
+    # Adjusted average energy calculation to be across all songs, not just hype
     avg_energy = 0.0
     if all_songs:
         total_energy = sum(song.get("energy", 0) for song in all_songs)
@@ -163,12 +167,39 @@ def search_songs(
     if not query:
         return songs
 
-    q = query.lower().strip()
+    import re
+
+    # normalize query: lowercase, replace non-alnum with spaces, split into tokens
+    qnorm = re.sub(r"[^a-z0-9]+", " ", query.lower().strip())
+    tokens = [t for t in qnorm.split() if t]
+    if not tokens:
+        return songs
+
     filtered: List[Song] = []
 
+    # determine which fields to search
+    if not field or field == "any":
+        search_fields = ["artist", "title", "genre"]
+    else:
+        search_fields = [field]
+
+    def norm_value(val: object) -> str:
+        s = str(val or "").lower()
+        return re.sub(r"[^a-z0-9]+", " ", s)
+
     for song in songs:
-        value = str(song.get(field, "")).lower()
-        if value and q in value:
+        # build normalized values for each searchable field
+        values = {f: norm_value(song.get(f, "")) for f in search_fields}
+
+        # all tokens must be present in any of the searchable fields (AND semantics)
+        matched_all = True
+        for token in tokens:
+            found = any(token in values[f] for f in search_fields if values.get(f))
+            if not found:
+                matched_all = False
+                break
+
+        if matched_all:
             filtered.append(song)
 
     return filtered
@@ -184,7 +215,7 @@ def lucky_pick(
     elif mode == "chill":
         songs = playlists.get("Chill", [])
     else:
-        songs = playlists.get("Hype", []) + playlists.get("Chill", [])
+        songs = playlists.get("Hype", []) + playlists.get("Chill", []) + playlists.get("Mixed", [])
 
     return random_choice_or_none(songs)
 
@@ -193,6 +224,7 @@ def random_choice_or_none(songs: List[Song]) -> Optional[Song]:
     """Return a random song or None."""
     import random
 
+    # Consider edge case where songs is empty or None
     if not songs:
         return None
     return random.choice(songs)
